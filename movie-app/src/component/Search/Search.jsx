@@ -1,9 +1,25 @@
 import React from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./search.css";
 
-function Search({ setMovietitle, movietitle}) {
+function Search({ setMovietitle, movietitle }) {
+  const navigate = useNavigate();
   const [search, setSearch] = useState("");
+  
+
+
+
+  const fetchMovie = (value) => {
+    fetch(
+      `https://api.themoviedb.org/3/search/movie?api_key=7905408ff436151dd32243b7c05ced3d&query=${value}`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setMovietitle(data.results);
+      });
+  };
 
   const handleChange = (e) => {
     setSearch(e.target.value);
@@ -11,8 +27,12 @@ function Search({ setMovietitle, movietitle}) {
 
   const submit = (e) => {
     e.preventDefault();
-    setMovietitle(search);
+    fetchMovie(search);
+    let path = "/film";
+    navigate(path);
   };
+
+ 
 
   return (
     <div className="input-div">
@@ -28,6 +48,7 @@ function Search({ setMovietitle, movietitle}) {
       >
         Let's Find your movie
       </button>
+     
     </div>
   );
 }
